@@ -1,3 +1,13 @@
+
+A personalized dwm with some changes based on dwm 6.4
+
+Changes include
+----------------
+config head file  
+patches
+
+The original README file as follows:
+
 dwm - dynamic window manager
 ============================
 dwm is an extremely fast, small, and dynamic window manager for X.
