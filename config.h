@@ -7,11 +7,19 @@ static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 0;        /* 0 means bottom bar */
 static const char *fonts[]          = { "monospace:size=10" };
 static const char dmenufont[]       = "monospace:size=10";
+/* Default Color:
+ *
+ * #222222 - very dark
+ * #444444 - dark
+ * #bbbbbb - gray
+ * #222222 - white
+ */
 static const char col_gray1[]       = "#222222";
 static const char col_gray2[]       = "#444444";
 static const char col_gray3[]       = "#bbbbbb";
 static const char col_gray4[]       = "#eeeeee";
 static const char col_cyan[]        = "#005577";
+/* Normal window color scheme and selected window color scheme
 static const char *colors[][3]      = {
 	/*               fg         bg         border   */
 	[SchemeNorm] = { col_gray3, col_gray1, col_gray2 },
@@ -21,6 +29,8 @@ static const char *colors[][3]      = {
 /* tagging */
 static const char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
 
+/* If the application should always be in floating mode */
+/* tags mask: which tag the window appears on, 1 << 8 means 9, 0 means any tag */
 static const Rule rules[] = {
 	/* xprop(1):
 	 *	WM_CLASS(STRING) = instance, class
@@ -39,13 +49,16 @@ static const int lockfullscreen = 1; /* 1 will force focus on the fullscreen win
 
 static const Layout layouts[] = {
 	/* symbol     arrange function */
-	{ "[]=",      tile },    /* first entry is default */
-	{ "><>",      NULL },    /* no layout function means floating behavior */
-	{ "[M]",      monocle },
+	{ "[]=",      tile },    /* first entry is default. Key: Alt + T*/ 
+	{ "><>",      NULL },    /* no layout function means floating behavior. Key: Alt + F*/
+	{ "[M]",      monocle }, /* Key: Alt + M */
 };
 
 /* key definitions */
-#define MODKEY Mod1Mask
+#define MODKEY Mod1Mask /* Mod1Mask is Alt and Mod4Mask is Super */
+
+/* Tag + 123 to switch between tags  
+ * Shift + tag + 123 to move one client to different tag */
 #define TAGKEYS(KEY,TAG) \
 	{ MODKEY,                       KEY,      view,           {.ui = 1 << TAG} }, \
 	{ MODKEY|ControlMask,           KEY,      toggleview,     {.ui = 1 << TAG} }, \
@@ -59,11 +72,17 @@ static const Layout layouts[] = {
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
 static const char *termcmd[]  = { "st", NULL };
+static const char *edgecmd[] = ["microsoft-edge-dev",NULL];
 
+/* Default modifier key is Alt,
+ * What the following means: Alt + shift + return to run termcmd(st)
+ * ALt + P to run dmenucmd(dmenucmd)
+ */
 static const Key keys[] = {
 	/* modifier                     key        function        argument */
 	{ MODKEY,                       XK_p,      spawn,          {.v = dmenucmd } },
 	{ MODKEY|ShiftMask,             XK_Return, spawn,          {.v = termcmd } },
+    { MODKEY|ShiftMask,             XK_e,      spawn,          {.v = edgecmd } },
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
@@ -99,6 +118,8 @@ static const Key keys[] = {
 
 /* button definitions */
 /* click can be ClkTagBar, ClkLtSymbol, ClkStatusText, ClkWinTitle, ClkClientWin, or ClkRootWin */
+/* ClkLtSymbol: click layout symbol */
+/* even mask: click with or without MODKEY */
 static const Button buttons[] = {
 	/* click                event mask      button          function        argument */
 	{ ClkLtSymbol,          0,              Button1,        setlayout,      {0} },

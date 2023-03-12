@@ -20,6 +20,15 @@
  *
  * To understand everything else, start reading main().
  */
+
+
+/*
+ * Client: A window(program). Tagged with at least on tag.
+ *
+ *
+ *
+ *
+ */
 #include <errno.h>
 #include <locale.h>
 #include <signal.h>
